@@ -8,7 +8,7 @@ The **Patient Reminder Web Application** is a cloud-based solution built on AWS 
 ## 🚀 Project Workflow  
 
 ### 1. Frontend (Static Website Hosting)  
-![Step1](images/Screenshot%202025-09-06%2014114.png)  
+![Step1](images/Screenshot%202025-09-06%20154114.png)
 - Uploaded `index.html` file to **Amazon S3 bucket**.  
 
 ![Step2](images/Screenshot%202025-09-06%2014154.png)  
