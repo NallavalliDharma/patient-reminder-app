@@ -1,0 +1,62 @@
+{
+  "Comment": "Send reminder via email, SMS, or both",
+  "StartAt": "ChooseAction",
+  "States": {
+    "ChooseAction": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.sendType",
+          "StringEquals": "email",
+          "Next": "SendEmail"
+        },
+        {
+          "Variable": "$.sendType",
+          "StringEquals": "sms",
+          "Next": "SendSMS"
+        },
+        {
+          "Variable": "$.sendType",
+          "StringEquals": "both",
+          "Next": "SendBoth"
+        }
+      ]
+    },
+    "SendEmail": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:751081874724:function:sendEmailLambda",
+      "End": true
+    },
+    "SendSMS": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:751081874724:function:sendSmsLambda",
+      "End": true
+    },
+    "SendBoth": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "EmailTask",
+          "States": {
+            "EmailTask": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:751081874724:function:sendEmailLambda",
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "SmsTask",
+          "States": {
+            "SmsTask": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:751081874724:function:sendSmsLambda",
+              "End": true
+            }
+          }
+        }
+      ],
+      "End": true
+    }
+  }
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Reminder Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 500;
+            display: block;
+            margin-top: 12px;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0px 0px 5px rgba(76, 175, 80, 0.4);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #43a047;
+        }
+        .success-msg, .error-msg {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        .success-msg {
+            color: green;
+        }
+        .error-msg {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Patient Reminder</h2>
+        <form id="reminderForm">
+            <label for="name">Patient Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Patient Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="sms">Patient SMS</label>
+            <input type="tel" id="sms" name="sms" pattern="[0-9]{10}" placeholder="10-digit number" required>
+
+            <label for="message">Reminder Message</label>
+            <textarea id="message" name="message" rows="3" required></textarea>
+
+            <label for="sendType">Send via</label>
+            <select id="sendType" name="sendType" required>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+                <option value="both">Both</option>
+            </select>
+
+            <button type="submit">Send</button>
+            <div class="success-msg" id="successMsg">Reminder sent successfully!</div>
+            <div class="error-msg" id="errorMsg">Failed to send reminder. Try again.</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('reminderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                sms: document.getElementById('sms').value,
+                message: document.getElementById('message').value,
+                sendType: document.getElementById('sendType').value
+            };
+
+            try {
+                const response = await fetch('https://7j1dt2f7hb.execute-api.us-east-1.amazonaws.com/DEV/reminder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    document.getElementById('successMsg').style.display = 'block';
+                    document.getElementById('errorMsg').style.display = 'none';
+                    document.getElementById('reminderForm').reset();
+                } else {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    document.getElementById('successMsg').style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('successMsg').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
